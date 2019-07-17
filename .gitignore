@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# latex
+*.aux
+*.log
+*.synctex.gz
+*.txt
+*.synctex
+*.toc
+*.xml
