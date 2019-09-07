@@ -2,7 +2,7 @@
 
 import socket
 from DNS_QueryBuilder import *
-from scapy.all import *
+from kamene.all import *
 
 src_ip = '192.168.0.102'
 dest_ip = '8.8.8.8'
