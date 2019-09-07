@@ -9,7 +9,7 @@ def send_udp(msg ,server_ip, port):
 
         try:
             sock.sendto(binascii.unhexlify(msg), (server_ip, port))
-            print("udp sent")
+            print(binascii.unhexlify(msg))
 
             data, address = sock.recvfrom(4096)
         finally:
@@ -25,5 +25,5 @@ q.setDomainName("codeforces.com")
 
 ques = q.getDNSQuery()
 print(ques)
-res = send_udp(ques,"8.8.8.8", 53)
+res = send_udp(ques,"192.168.0.104", 53)
 print(q.getIP(res))  

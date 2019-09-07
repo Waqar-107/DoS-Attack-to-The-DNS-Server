@@ -2,9 +2,9 @@
 
 import socket
 from DNS_QueryBuilder import *
-from kamene.all import *
+from scapy.all import *
 
-src_ip = '192.168.0.102'
+src_ip = '192.168.0.106'
 dest_ip = '8.8.8.8'
 
 src_port = 107
@@ -25,10 +25,6 @@ payload = binascii.unhexlify(payload)
 spoofed_packet = IP(src=src_ip, dst=dest_ip) / UDP(sport=src_port, dport=dest_port) / payload
 send(spoofed_packet)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-data, address = sock.recvfrom(4096)
+sock2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+data, address = sock2.recvfrom(4096)
 print(q.getIP(binascii.hexlify(data).decode("utf-8")), address)
-
-# res = send_udp(ques,"8.8.8.8", 53)
-# print(q.getIP(res))  
-# binascii.unhexlify(msg)
